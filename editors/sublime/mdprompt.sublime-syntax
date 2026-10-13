@@ -1,0 +1,56 @@
+%YAML 1.2
+---
+name: mdprompt
+file_extensions: [mdp, mdprompt]
+scope: text.html.markdown.mdprompt
+contexts:
+  main:
+    - match: '\\.'
+      scope: constant.character.escape.mdprompt
+    - match: '^ {0,3}(`{3,})[^`]*$'
+      scope: punctuation.definition.raw.begin.markdown
+      push:
+        - meta_scope: markup.raw.block.markdown
+        - match: '^ {0,3}\1`*[ \t]*$'
+          pop: true
+    - match: '^ {0,3}(~{3,}).*$'
+      push:
+        - meta_scope: markup.raw.block.markdown
+        - match: '^ {0,3}\1~*[ \t]*$'
+          pop: true
+    - match: '(`+)'
+      push:
+        - meta_scope: markup.raw.inline.markdown
+        - match: '(?<!`)\1(?!`)'
+          pop: true
+    - match: '^ {0,3}\^%%[ \t]*$'
+      scope: punctuation.definition.instruction.begin.mdprompt
+      push:
+        - meta_scope: string.unquoted.instruction.mdprompt
+        - match: '^ {0,3}%%\^[ \t]*$'
+          scope: punctuation.definition.instruction.end.mdprompt
+          pop: true
+    - match: '^ {0,3}\$\$[ \t]*$'
+      push:
+        - meta_scope: markup.math.block.mdprompt
+        - match: '^ {0,3}\$\$[ \t]*$'
+          pop: true
+    - match: '\^%(?!%(?!\^))'
+      push:
+        - meta_scope: string.unquoted.instruction.mdprompt
+        - match: '\\.'
+        - match: '%\^|$'
+          pop: true
+    - match: '(?<!\$)\$\$(?!\$)'
+      push:
+        - meta_scope: markup.math.display.inline.mdprompt
+        - match: '\\.'
+        - match: '\$\$|$'
+          pop: true
+    - match: '(?<!\$)\$(?!\$)'
+      push:
+        - meta_scope: markup.math.inline.mdprompt
+        - match: '\\.'
+        - match: '\$|$'
+          pop: true
+    - include: scope:text.html.markdown

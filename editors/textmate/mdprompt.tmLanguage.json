@@ -1,0 +1,210 @@
+{
+  "name": "mdprompt",
+  "scopeName": "text.html.markdown.mdprompt",
+  "fileTypes": [
+    "mdp",
+    "mdprompt"
+  ],
+  "patterns": [
+    {
+      "name": "constant.character.escape.mdprompt",
+      "match": "\\\\[!\"#$%&\\x27()*+,\\-./:;<=>?@\\[\\]\\\\^_`{|}~]"
+    },
+    {
+      "name": "markup.fenced_code.block.mdprompt",
+      "begin": "^ {0,3}(`{3,})[^`]*$",
+      "end": "^ {0,3}\\1`*[ \\t]*$",
+      "patterns": [],
+      "contentName": "markup.raw.block.mdprompt",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.fenced.markdown"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.fenced.markdown"
+        }
+      }
+    },
+    {
+      "name": "markup.fenced_code.block.mdprompt",
+      "begin": "^ {0,3}(~{3,}).*$",
+      "end": "^ {0,3}\\1~*[ \\t]*$",
+      "patterns": [],
+      "contentName": "markup.raw.block.mdprompt",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.fenced.markdown"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.fenced.markdown"
+        }
+      }
+    },
+    {
+      "name": "markup.raw.inline.mdprompt",
+      "begin": "(`+)",
+      "end": "(?<!`)\\1(?!`)"
+    },
+    {
+      "name": "meta.instruction.block.mdprompt",
+      "contentName": "string.unquoted.instruction.mdprompt",
+      "begin": "^ {0,3}(\\^%%)[ \\t]*$",
+      "end": "^ {0,3}(%%\\^)[ \\t]*$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.instruction.begin.mdprompt"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.instruction.end.mdprompt"
+        }
+      }
+    },
+    {
+      "name": "meta.math.block.mdprompt",
+      "begin": "^ {0,3}\\$\\$[ \\t]*$",
+      "end": "^ {0,3}\\$\\$[ \\t]*$",
+      "contentName": "markup.math.mdprompt"
+    },
+    {
+      "name": "meta.instruction.inline.mdprompt",
+      "contentName": "string.unquoted.instruction.mdprompt",
+      "begin": "(\\^%)(?!%(?!\\^))",
+      "end": "(%\\^)|$",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.instruction.begin.mdprompt"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.instruction.end.mdprompt"
+        }
+      },
+      "patterns": [
+        {
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "markup.math.display.inline.mdprompt",
+      "begin": "(?<!\\$)\\$\\$(?!\\$)",
+      "end": "\\$\\$|$",
+      "patterns": [
+        {
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "markup.math.inline.mdprompt",
+      "begin": "(?<!\\$)\\$(?!\\$)",
+      "end": "\\$|$",
+      "patterns": [
+        {
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "include": "text.html.markdown"
+    }
+  ],
+  "injections": {
+    "L:text.html.markdown.mdprompt -markup.raw -markup.fenced_code -meta.instruction -markup.math -meta.math": {
+      "patterns": [
+        {
+          "name": "markup.fenced_code.block.mdprompt",
+          "begin": "^ {0,3}(`{3,})[^`]*$",
+          "end": "^ {0,3}\\1`*[ \\t]*$",
+          "patterns": [],
+          "contentName": "markup.raw.block.mdprompt",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.fenced.markdown"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.fenced.markdown"
+            }
+          }
+        },
+        {
+          "name": "markup.fenced_code.block.mdprompt",
+          "begin": "^ {0,3}(~{3,}).*$",
+          "end": "^ {0,3}\\1~*[ \\t]*$",
+          "patterns": [],
+          "contentName": "markup.raw.block.mdprompt",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.fenced.markdown"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.fenced.markdown"
+            }
+          }
+        },
+        {
+          "name": "meta.math.block.mdprompt",
+          "begin": "^ {0,3}\\$\\$[ \\t]*$",
+          "end": "^ {0,3}\\$\\$[ \\t]*$",
+          "contentName": "markup.math.mdprompt"
+        },
+        {
+          "name": "constant.character.escape.mdprompt",
+          "match": "\\\\[!\"#$%&\\x27()*+,\\-./:;<=>?@\\[\\]\\\\^_`{|}~]"
+        },
+        {
+          "name": "meta.instruction.inline.mdprompt",
+          "contentName": "string.unquoted.instruction.mdprompt",
+          "begin": "(\\^%)(?!%(?!\\^))",
+          "end": "(%\\^)|$",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.instruction.begin.mdprompt"
+            }
+          },
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.instruction.end.mdprompt"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "markup.math.display.inline.mdprompt",
+          "begin": "(?<!\\$)\\$\\$(?!\\$)",
+          "end": "\\$\\$|$",
+          "patterns": [
+            {
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "markup.math.inline.mdprompt",
+          "begin": "(?<!\\$)\\$(?!\\$)",
+          "end": "\\$|$",
+          "patterns": [
+            {
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

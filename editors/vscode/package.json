@@ -1,0 +1,46 @@
+{
+  "name": "mdprompt",
+  "displayName": "mdprompt",
+  "description": "GFM, TeX math, and explicit AI instruction highlighting",
+  "version": "0.1.2",
+  "publisher": "mdprompt",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "license": "MIT",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:mdprompt"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "mdprompt",
+        "aliases": [
+          "mdprompt"
+        ],
+        "extensions": [
+          ".mdp",
+          ".mdprompt"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mdprompt",
+        "scopeName": "text.html.markdown.mdprompt",
+        "path": "./syntaxes/mdprompt.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "mdprompt.preview",
+        "title": "mdprompt: Preview document content"
+      }
+    ]
+  }
+}

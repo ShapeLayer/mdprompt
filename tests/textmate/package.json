@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node plain-code.cjs && node test.cjs"
+  },
+  "dependencies": {
+    "vscode-textmate": "9.3.0",
+    "vscode-oniguruma": "2.0.1",
+    "js-yaml": "4.1.0"
+  }
+}
