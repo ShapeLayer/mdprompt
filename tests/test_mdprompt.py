@@ -92,6 +92,11 @@ class Conformance(unittest.TestCase):
     def test_instruction_only_document(self):
         self.assertEqual(self.parse('^%%\nedit\n%%^')['content'], '')
 
+    def test_control_z_does_not_truncate_input(self):
+        result = self.parse('before\x1a ^%after control-z%^')
+        self.assertEqual(result['instructions'][0]['text'], 'after control-z')
+        self.assertIn('before&#26;', result['content'])
+
     def test_streamed_large_block(self):
         text = ('한글 <script>\n' * 2000)
         self.assertEqual(self.parse('^%%\n' + text + '%%^')['instructions'][0]['text'], text)
