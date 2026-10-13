@@ -6,7 +6,7 @@ import unittest
 
 NATIVE = str(Path(sys.argv.pop(1)).resolve()) if len(sys.argv) > 1 else str(Path(__file__).resolve().parents[1] / 'build/mdprompt-cli')
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'python'))
-from mdprompt import parse, messages, ParseError
+from mdprompt import parse, messages, render_html, ParseError
 
 class Conformance(unittest.TestCase):
     def parse(self, source):
@@ -62,6 +62,18 @@ class Conformance(unittest.TestCase):
         with self.assertRaises(ParseError):
             self.parse('^%%\n%%^ trailing text\n')
         self.assertEqual(self.parse('^%%\r\nraw\r\n%%^\r\n')['instructions'][0]['text'], 'raw\n')
+
+    def test_newline_transport_matches_native_bytes(self):
+        for newline in ['\n', '\r\n', '\r']:
+            source = newline.join(['^%%', '한국어 요청', '', '두 번째 줄', '%%^', '', '본문']) + newline
+            with self.subTest(newline=repr(newline)):
+                raw_json = subprocess.run([NATIVE, '--json'], input=source.encode('utf-8'),
+                                          capture_output=True, check=True).stdout
+                self.assertEqual(self.parse(source), json.loads(raw_json))
+                self.assertEqual(self.parse(source)['instructions'][0]['text'], '한국어 요청\n\n두 번째 줄\n')
+                raw_html = subprocess.run([NATIVE, '--html'], input=source.encode('utf-8'),
+                                          capture_output=True, check=True).stdout.decode('utf-8')
+                self.assertEqual(render_html(source, native=NATIVE), raw_html)
 
     def test_html_protection(self):
         for source in ['<div>\n^%literal%^\n</div>\n', '<!-- ^%literal%^ -->', '<a title="^%literal%^">text</a>']:

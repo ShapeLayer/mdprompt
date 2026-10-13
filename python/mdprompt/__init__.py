@@ -23,12 +23,18 @@ def executable(explicit=None):
         return str(local)
     raise RuntimeError("Build mdprompt-cli, put it on PATH, or set MDPROMPT_NATIVE.")
 
-def parse(source: str, *, native=None) -> dict:
-    result = subprocess.run([executable(native), "--json"], input=source,
-                            text=True, encoding="utf-8", capture_output=True, check=False)
+def _run_native(source: str, mode: str, native=None) -> str:
+    # Text-mode stdin turns CRLF into CRCRLF on Windows. Keep transport binary
+    # and let cmark-gfm normalize the document's original newline bytes.
+    result = subprocess.run([executable(native), mode], input=source.encode("utf-8"),
+                            capture_output=True, check=False)
     if result.returncode:
-        raise ParseError(result.stderr.strip() or "native parser failed")
-    return json.loads(result.stdout)
+        raise ParseError(result.stderr.decode("utf-8", errors="replace").strip()
+                         or "native parser failed")
+    return result.stdout.decode("utf-8")
+
+def parse(source: str, *, native=None) -> dict:
+    return json.loads(_run_native(source, "--json", native))
 
 def messages(source: str, *, native=None) -> list[dict]:
     payload = parse(source, native=native)
@@ -37,8 +43,4 @@ def messages(source: str, *, native=None) -> list[dict]:
             {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}]
 
 def render_html(source: str, *, native=None) -> str:
-    result = subprocess.run([executable(native), "--html"], input=source,
-                            text=True, encoding="utf-8", capture_output=True, check=False)
-    if result.returncode:
-        raise ParseError(result.stderr.strip() or "native parser failed")
-    return result.stdout
+    return _run_native(source, "--html", native)
